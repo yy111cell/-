@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>康复君 · 康复医学学习库</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 顶部栏 -->
+<header class="topbar">
+  <div class="brand" onclick="goView('home')">
+    <span class="brand-mark">康</span>
+    <div class="brand-text"><strong>康复君</strong><small>REHAB · 学习库</small></div>
+  </div>
+  <nav class="topnav">
+    <button class="nav-item active" data-view="home" onclick="goView('home')">首页</button>
+    <button class="nav-item" data-view="quiz" onclick="goView('quiz')">刷题</button>
+    <button class="nav-item" data-view="study" onclick="goView('study')">学习</button>
+  </nav>
+  <div class="topbar-right">
+    <span class="stat-pill" id="topMastered" title="累计答对题数">✦ 0</span>
+    <button class="icon-btn" onclick="goView('records')" title="错题与历史">◷</button>
+  </div>
+</header>
+
+<!-- ============ 首页 ============ -->
+<main id="view-home" class="view active">
+  <section class="hero">
+    <div class="hero-deco" aria-hidden="true">
+      <span class="deco-num">01</span>
+      <span class="deco-line"></span>
+      <span class="deco-word">REHABILITATION</span>
+    </div>
+    <div class="hero-inner">
+      <p class="eyebrow">康复医学 · 系统备考</p>
+      <h1 class="hero-title">把每一次练习<br><em>变成临床直觉</em></h1>
+      <p class="hero-sub">九大科目题库 · 三种刷题模式 · 肌肉解剖记忆卡 · 康复评定量表<br>从知识到应试，一站式沉淀。</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" onclick="goView('quiz')">开始刷题 <span>→</span></button>
+        <button class="btn btn-ghost" onclick="goView('study')">进入学习页 <span>↗</span></button>
+      </div>
+      <div class="hero-metrics" id="heroMetrics"></div>
+    </div>
+  </section>
+
+  <section class="home-sections">
+    <div class="section-head"><span class="sec-no">A</span><h2>三大刷题模式</h2><p>按你的节奏，选一种打开方式</p></div>
+    <div class="mode-grid">
+      <div class="mode-card" onclick="quickStart('direct')">
+        <span class="mode-idx">Ⅰ</span>
+        <h3>直接刷题</h3>
+        <p>自定义题量 N，答完统一对答案，即时看正确率。适合系统过题。</p>
+        <span class="mode-cta">进入 →</span>
+      </div>
+      <div class="mode-card accent" onclick="quickStart('recite')">
+        <span class="mode-idx">Ⅱ</span>
+        <h3>背题模式</h3>
+        <p>题目与答案解析同时呈现，一页一背。适合碎片时间记忆。</p>
+        <span class="mode-cta">进入 →</span>
+      </div>
+      <div class="mode-card" onclick="quickStart('exam')">
+        <span class="mode-idx">Ⅲ</span>
+        <h3>模拟考试</h3>
+        <p>随机抽题组卷，选择 / 填空 / 问答自由配比，还原考试节奏。</p>
+        <span class="mode-cta">进入 →</span>
+      </div>
+    </div>
+
+    <div class="section-head"><span class="sec-no">B</span><h2>九大科目</h2><p>覆盖康复治疗学核心课程</p></div>
+    <div class="subject-grid" id="homeSubjects"></div>
+
+    <div class="section-head"><span class="sec-no">C</span><h2>学习工具</h2><p>把零散知识，变成可检索的记忆</p></div>
+    <div class="tool-grid">
+      <div class="tool-card" onclick="goView('study');switchStudyTab('muscle')">
+        <div class="tool-icon">肌</div>
+        <div><h3>肌肉解剖记忆卡</h3><p>单块肌肉位置图 + 起止点 / 功能 / 神经，翻卡自测。</p></div>
+        <span class="tool-arrow">↗</span>
+      </div>
+      <div class="tool-card" onclick="goView('study');switchStudyTab('scale')">
+        <div class="tool-icon">评</div>
+        <div><h3>康复评定量表合集</h3><p>Berg、Brunnstrom、Ashworth、Barthel 等常用量表速查。</p></div>
+        <span class="tool-arrow">↗</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ 刷题页 ============ -->
+<main id="view-quiz" class="view">
+  <div class="page-head">
+    <div><p class="eyebrow">QUESTION BANK</p><h1 class="page-title">刷题台</h1></div>
+    <p class="page-desc">选科目 · 定模式 · 开始练习</p>
+  </div>
+
+  <!-- 配置区 -->
+  <section class="quiz-setup card" id="quizSetup">
+    <div class="setup-row">
+      <div class="setup-block">
+        <label>① 选择科目</label>
+        <div class="subject-chips" id="quizSubjectChips"></div>
+      </div>
+    </div>
+    <div class="setup-row">
+      <div class="setup-block">
+        <label>② 选择模式</label>
+        <div class="mode-tabs" id="modeTabs">
+          <button class="mode-tab active" data-mode="direct" onclick="selectMode('direct')">直接刷题</button>
+          <button class="mode-tab" data-mode="recite" onclick="selectMode('recite')">背题模式</button>
+          <button class="mode-tab" data-mode="exam" onclick="selectMode('exam')">模拟考试</button>
+        </div>
+      </div>
+    </div>
+    <!-- 模式专属配置 -->
+    <div class="setup-row mode-config" id="cfg-direct">
+      <div class="setup-block">
+        <label>本轮题量 N <span class="hint">（做完 N 题后统一对答案）</span></label>
+        <div class="cfg-inline">
+          <input type="number" id="directN" min="1" max="200" value="20">
+          <span class="unit">题</span>
+          <button class="mini-btn" onclick="setN(10)">10</button>
+          <button class="mini-btn" onclick="setN(20)">20</button>
+          <button class="mini-btn" onclick="setN(50)">50</button>
+        </div>
+      </div>
+      <div class="setup-block">
+        <label>题型范围</label>
+        <div class="type-filter" id="directTypes">
+          <label><input type="checkbox" value="single" checked> 单选题</label>
+          <label><input type="checkbox" value="multi"> 多选题</label>
+          <label><input type="checkbox" value="blank"> 填空/名词解释</label>
+          <label><input type="checkbox" value="qa"> 问答题</label>
+        </div>
+      </div>
+    </div>
+    <div class="setup-row mode-config" id="cfg-recite" style="display:none">
+      <div class="setup-block">
+        <label>背题范围</label>
+        <div class="type-filter" id="reciteTypes">
+          <label><input type="checkbox" value="single" checked> 单选题</label>
+          <label><input type="checkbox" value="multi"> 多选题</label>
+          <label><input type="checkbox" value="blank"> 填空/名词解释</label>
+          <label><input type="checkbox" value="qa"> 问答题</label>
+        </div>
+      </div>
+    </div>
+    <div class="setup-row mode-config" id="cfg-exam" style="display:none">
+      <div class="setup-block">
+        <label>组卷配比 <span class="hint">（留空则用默认）</span></label>
+        <div class="exam-grid">
+          <div class="exam-field"><span>单选题</span><input type="number" id="examSingle" min="0" value="30"><small>默认 30</small></div>
+          <div class="exam-field"><span>多选题</span><input type="number" id="examMulti" min="0" value="0"><small>默认 0</small></div>
+          <div class="exam-field"><span>填空题</span><input type="number" id="examBlank" min="0" value="5"><small>默认 5</small></div>
+          <div class="exam-field"><span>问答题</span><input type="number" id="examQa" min="0" value="5"><small>默认 5</small></div>
+        </div>
+        <button class="mini-btn" onclick="resetExamDefault()">恢复默认配比</button>
+      </div>
+    </div>
+    <div class="setup-actions">
+      <button class="btn btn-primary" onclick="startQuiz()">开始练习 <span>→</span></button>
+      <span class="setup-tip" id="setupTip"></span>
+    </div>
+  </section>
+
+  <!-- 答题区 -->
+  <section class="quiz-area" id="quizArea" style="display:none">
+    <div class="quiz-toolbar">
+      <div class="quiz-meta">
+        <span id="quizSubjectLabel">—</span>
+        <span class="dot">·</span>
+        <span id="quizModeLabel">—</span>
+      </div>
+      <div class="quiz-progress"><div class="bar"><i id="quizProgressBar"></i></div><span id="quizProgressText">0/0</span></div>
+      <button class="btn btn-ghost sm" onclick="quitQuiz()">退出</button>
+    </div>
+    <div id="questionContainer"></div>
+    <div class="quiz-footnav" id="quizFootnav">
+      <button class="btn btn-ghost" id="btnPrevQ" onclick="navQuestion(-1)">← 上一题</button>
+      <button class="btn btn-primary" id="btnNextQ" onclick="navQuestion(1)">下一题 →</button>
+      <button class="btn btn-primary" id="btnSubmitQuiz" onclick="submitQuiz()" style="display:none">交卷并看结果 →</button>
+    </div>
+  </section>
+
+  <!-- 结果区 -->
+  <section class="result-area card" id="resultArea" style="display:none"></section>
+</main>
+
+<!-- ============ 学习页 ============ -->
+<main id="view-study" class="view">
+  <div class="page-head">
+    <div><p class="eyebrow">STUDY ROOM</p><h1 class="page-title">学习室</h1></div>
+    <p class="page-desc">图解记忆 · 量表速查</p>
+  </div>
+  <div class="study-tabs">
+    <button class="study-tab active" data-tab="muscle" onclick="switchStudyTab('muscle')">肌肉解剖记忆卡</button>
+    <button class="study-tab" data-tab="scale" onclick="switchStudyTab('scale')">康复评定量表合集</button>
+  </div>
+
+  <!-- 肌肉记忆卡 -->
+  <section id="study-muscle" class="study-panel">
+    <div class="muscle-toolbar card">
+      <div class="muscle-tools-left">
+        <button class="btn btn-primary sm" onclick="openMuscleTest()">进入翻卡测试</button>
+        <input type="text" id="muscleSearch" placeholder="搜索肌肉名称…" oninput="renderMuscles()" class="search-input">
+      </div>
+      <span class="toolbar-count" id="muscleCount"></span>
+    </div>
+    <p class="data-note">图片、起点、止点与功能整理自《全身主要骨的连结及肌肉》等解剖资料；<b>支配神经</b>为依据解剖学教材补充的常见支配，供记忆参考，具体以教材为准。</p>
+    <div class="muscle-grid" id="muscleGrid"></div>
+  </section>
+
+  <!-- 量表合集 -->
+  <section id="study-scale" class="study-panel" style="display:none">
+    <div class="muscle-toolbar card">
+      <div class="muscle-tools-left">
+        <input type="text" id="scaleSearch" placeholder="搜索量表（如 Berg / Barthel / 平衡）…" oninput="renderScales()" class="search-input">
+        <div class="scale-filter" id="scaleFilter"></div>
+      </div>
+      <span class="toolbar-count" id="scaleCount"></span>
+    </div>
+    <div class="scale-grid" id="scaleGrid"></div>
+  </section>
+</main>
+
+<!-- ============ 记录页 ============ -->
+<main id="view-records" class="view">
+  <div class="page-head">
+    <div><p class="eyebrow">YOUR RECORDS</p><h1 class="page-title">错题与历史</h1></div>
+    <button class="btn btn-ghost sm" onclick="clearRecords()">清空记录</button>
+  </div>
+  <div class="study-tabs">
+    <button class="study-tab active" data-rtab="wrong" onclick="switchRecordTab('wrong')">错题集 <span id="wrongBadge" class="badge">0</span></button>
+    <button class="study-tab" data-rtab="history" onclick="switchRecordTab('history')">练习历史</button>
+  </div>
+  <div id="record-wrong" class="record-panel">
+    <div id="wrongList"></div>
+  </div>
+  <div id="record-history" class="record-panel" style="display:none">
+    <div id="historyList"></div>
+  </div>
+</main>
+
+<!-- 翻卡测试弹层 -->
+<div class="modal" id="muscleTestModal" style="display:none">
+  <div class="modal-backdrop" onclick="closeMuscleTest()"></div>
+  <div class="modal-box">
+    <div class="modal-head">
+      <div><p class="eyebrow">FLIP CARD TEST</p><h2>肌肉翻卡测试</h2></div>
+      <button class="icon-btn" onclick="closeMuscleTest()">✕</button>
+    </div>
+    <div class="test-setup" id="testSetup">
+      <label>测试数量：<input type="number" id="testCount" min="1" value="10"></label>
+      <button class="btn btn-primary" onclick="beginMuscleTest()">开始测试</button>
+    </div>
+    <div class="test-stage" id="testStage" style="display:none">
+      <div class="test-progress"><span id="testIdx">1/10</span><div class="bar"><i id="testBar"></i></div></div>
+      <div class="flip-card" id="flipCard" onclick="flipCard()">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <p class="flip-hint">点击卡片揭晓答案</p>
+            <h2 id="testQuestion">肌肉名称？</h2>
+          </div>
+          <div class="flip-face flip-back">
+            <div class="flip-back-content" id="testAnswer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="test-actions">
+        <button class="btn btn-ghost" onclick="prevTestCard()">← 上一张</button>
+        <button class="btn btn-ghost" onclick="flipCard()">翻面</button>
+        <button class="btn btn-primary" onclick="nextTestCard()">下一张 →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 通用弹层（问答/填空作答） -->
+<div class="modal" id="qaModal" style="display:none">
+  <div class="modal-backdrop" onclick="closeQaModal()"></div>
+  <div class="modal-box narrow">
+    <div class="modal-head"><h2>作答</h2><button class="icon-btn" onclick="closeQaModal()">✕</button></div>
+    <div id="qaModalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/data-questions.js"></script>
+<script src="js/data-muscles.js"></script>
+<script src="js/data-scales.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
